@@ -16,7 +16,7 @@ type PostMetadata = {
 type PostProps = {
   post: {
     metadata: PostMetadata;
-    markdown: string;
+    markdown: any;
   };
 };
 
