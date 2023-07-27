@@ -56,13 +56,10 @@ const Post = ({post}) => {
               const match = /language-(\w+)/.exec(className || '')
               return !inline && match ? (
                 <SyntaxHighlighter
-                  // {...props}
-                  
                   style={kimbieLight}
                   language={match[1]}
                   PreTag="div"
-                >{String(children).replace(/\n$/, '')}
-                  </SyntaxHighlighter>
+                >{String(children).replace(/\n$/, '')}</SyntaxHighlighter>
               ) : (
                 <code >
                   {children}
@@ -70,9 +67,7 @@ const Post = ({post}) => {
               )
             }
           }}
-        >{post.markdown.parent} 
-        
-        </ReactMarkdown>
+        >{post.markdown.parent}</ReactMarkdown>
         <Link href="/">
           <span className='pb-20 block mt-3 text-sky-900'>←ホームに戻る</span>
         </Link>
