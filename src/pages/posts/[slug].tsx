@@ -7,6 +7,20 @@ import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 import { kimbieLight } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import Link from 'next/link';
 
+type PostMetadata = {
+  title: string;
+  date: string;
+  tags: string[];
+};
+ 
+type PostProps = {
+  post: {
+    metadata: PostMetadata;
+    markdown: string;
+  };
+};
+
+
 export const getStaticPaths = async () => {
     const allPosts = await getAllPosts();
     const paths = allPosts.map(({slug}) => ({ params: {slug} }));
@@ -29,7 +43,7 @@ export const  getStaticProps = async ({params}) => {
 }
 
 
-const Post = ({post}) => {
+const Post = ({post}: PostProps) => {
   return (
     <section className='container lg:px-2 px-5 h-screen lg:w-2/5 mx-auto mt-20'>
       <h2 className='w-full text-2xl font-medium'>

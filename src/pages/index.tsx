@@ -7,6 +7,21 @@ import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import Tag from "../../components/Tag/Tag"
 
+
+type Post = {
+  title: string;
+  description: string;
+  date: string;
+  tags: string[];
+  slug: string;
+};
+ 
+type HomeProps = {
+  fourPosts: Post[];
+  allTags: string[];
+};
+ 
+
 export const getStaticProps: GetStaticProps = async () => {
   const fourPosts = await getPostsForTopPage(4);
   const allTags = await getAllTags();
@@ -22,7 +37,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 // const inter = Inter({ subsets: ['latin'] })
 
-export default function Home({fourPosts,allTags}) {
+export default function Home({ fourPosts, allTags }: HomeProps) {
   
   return (
     
