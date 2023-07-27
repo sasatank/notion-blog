@@ -6,7 +6,7 @@ import { NUMBER_OF_POSTS_PER_PAGE } from '../constants/constants'
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 
-})
+});
 
 const n2m = new NotionToMarkdown({ notionClient: notion });
 
@@ -14,6 +14,19 @@ export const getAllPosts = async () => {
   const posts = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID,
     page_size: 100,
+    filter: {
+      property: "Published",
+      checkbox: {
+        equals: true,
+      },
+    },
+    sorts: [
+      {
+        property: "Date",
+        direction: "descending"
+    },
+     
+    ],
   });
 
   const allPosts = posts.results;
@@ -25,7 +38,7 @@ export const getAllPosts = async () => {
     return getPageMetaData(post);
   });
 
-}
+};
 
 
 
@@ -35,19 +48,19 @@ const getPageMetaData = (post) => {
       return tag.name;
     });
     return allTags;
-  }
+  };
 
   return {
-    id : post.id,
+    id: post.id,
     title: post.properties.Name.title[0].plain_text,
     description: post.properties.Description.rich_text[0].plain_text,
     date: post.properties.Date.date.start,
     slug: post.properties.Slug.rich_text[0].plain_text,
     tags: getTags(post.properties.Tags.multi_select),
-  }
+  };
 };
 
-export const getSinglePost = async  (slug) => {
+export const getSinglePost = async (slug) => {
   const response = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID,
     filter: {
@@ -75,12 +88,12 @@ export const getSinglePost = async  (slug) => {
 // Topページ用記事の取得（４つ）
 export const getPostsForTopPage = async (pageSize: number) =>{
   const allPosts = await getAllPosts();
-  const fourPosts = await allPosts.slice(0,pageSize);
+  const fourPosts = allPosts.slice(0,pageSize);
   return fourPosts;
 }
 
 // ページ番号に応じた記事の取得
-export const getPostsByPage = async (page: Number) => {
+export const getPostsByPage = async (page: number) => {
   const allPosts = await getAllPosts();
 
   const startIndex = (page -1) * NUMBER_OF_POSTS_PER_PAGE;
@@ -92,14 +105,11 @@ export const getPostsByPage = async (page: Number) => {
 export const getNumberOfPages = async () => {
   const allPosts = await getAllPosts();
 
-  // 
-  
-
   return Math.floor(allPosts.length / NUMBER_OF_POSTS_PER_PAGE) +  
   (allPosts.length % NUMBER_OF_POSTS_PER_PAGE > 0 ? 1 : 0);
   
 
-}
+};
 
 export const getPostsByTagAndPage = async (tagName:string,page:number) => {
   const allPosts =  await getAllPosts();
@@ -112,4 +122,30 @@ export const getPostsByTagAndPage = async (tagName:string,page:number) => {
 
   return posts.slice(startIndex,endIndex);
 
+};
+
+
+
+export const getNumberOfPagesByTag = async (tagName:string) =>{
+  const allPosts = await getAllPosts();
+
+  const posts = allPosts.filter((post) => 
+    post.tags.find((tag: string) => tag === tagName)
+  );
+
+  return Math.floor(posts.length / NUMBER_OF_POSTS_PER_PAGE) +  
+  (posts.length % NUMBER_OF_POSTS_PER_PAGE > 0 ? 1 : 0);
 }
+
+export const getAllTags = async () => {
+  const allPosts = await getAllPosts();
+
+  const allTagsDuplicationLists =  allPosts.flatMap((post) => post.tags);
+  const set = new Set(allTagsDuplicationLists);
+  const allTagsList = Array.from(set);
+  console.log(allTagsList);
+
+
+
+  return allTagsList;
+};

@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Pagination from "../../../../../../components/Pagination/Pagination";
 import SinglePost from "../../../../../../components/Post/SinglePost";
-// import Tag from "../../../../components/Tag/Tag";
+import Tag from "../../../../../../components/Tag/Tag";
 import {
   getAllPosts,
   // getAllTags,
@@ -10,20 +10,33 @@ import {
   getPostsByPage,
   getPostsByTagAndPage,
   getPostsForTopPage,
+  getNumberOfPagesByTag,
+  getAllTags
 } from "../../../../../../lib/notionAPI";
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const allTags = await getAllTags();
+  let params = [];
+
+  await Promise.all(
+    allTags.map((tag:string) => {
+      return getNumberOfPagesByTag(tag).then((NumberOfPagesByTag:number) => {
+        for (let i = 1; i <= NumberOfPagesByTag; i++) {
+          params.push({ params: {tag:tag, page: i.toString() } });
+        }
+      });
+    })
+  );
+
+  // console.log(params);
+
+  
   
 
   
 
   return {
-    paths: [{
-      params: {
-        tag : 'blog',
-        page: '1'
-      },
-    }],
+    paths: params,
     fallback: "blocking",
   };
 };
@@ -37,17 +50,23 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // console.log(upperCaseCurrentTag);
  
   const posts = await getPostsByTagAndPage(upperCaseCurrentTag,parseInt(currentPage,10));
-  console.log(parseInt(currentPage,10));
+
+  const numberOfPagesByTag = await getNumberOfPagesByTag(upperCaseCurrentTag);
+
+  const allTags = await getAllTags();
+  
   return {
     props: {
       posts,
-      // allTags,
+      numberOfPagesByTag,
+      currentTag,
+      allTags
     },
     revalidate: 10,
   };
 };
 
-const BlogTagPageList = ({ numberOfPage, posts }) => {
+const BlogTagPageList = ({ numberOfPagesByTag, posts,currentTag,allTags }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -74,8 +93,8 @@ const BlogTagPageList = ({ numberOfPage, posts }) => {
             </div>
           ))}
         </section>
-        <Pagination numberOfPage={numberOfPage} tag={""} />
-        {/* <Tag tags={allTags} /> */}
+        <Pagination numberOfPage={numberOfPagesByTag} tag={currentTag} />
+        <Tag tags={allTags} />
       </main>
     </div>
   );

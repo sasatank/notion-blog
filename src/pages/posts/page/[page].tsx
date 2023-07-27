@@ -2,9 +2,10 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Pagination from "../../../../components/Pagination/Pagination";
 import SinglePost from "../../../../components/Post/SinglePost";
-// import Tag from "../../../../components/Tag/Tag";
+import Tag from "../../../../components/Tag/Tag";
 import {
   getAllPosts,
+  getAllTags,
   // getAllTags,
   getNumberOfPages,
   getPostsByPage,
@@ -32,13 +33,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
   const numberOfPage = await getNumberOfPages();
 
-  // const allTags = await getAllTags();
+  const allTags = await getAllTags();
 
   return {
     props: {
       postsByPage,
       numberOfPage,
-      // allTags,
+      allTags,
     },
     revalidate: 10,
   };
@@ -72,7 +73,7 @@ const BlogPageList = ({ postsByPage, numberOfPage, allTags }) => {
           ))}
         </section>
         <Pagination numberOfPage={numberOfPage} tag={""} />
-        {/* <Tag tags={allTags} /> */}
+        <Tag tags={allTags} />
       </main>
     </div>
   );
