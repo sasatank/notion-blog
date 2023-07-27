@@ -14,6 +14,7 @@ type Post = {
   date: string;
   tags: string[];
   slug: string;
+  id: number;
 };
  
 type HomeProps = {
