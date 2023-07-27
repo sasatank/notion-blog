@@ -17,7 +17,7 @@ export const getStaticPaths = async () => {
     }
 };
 
-export async function getStaticProps({params}) {
+export const  getStaticProps = async ({params}) => {
   const post = await getSinglePost(params.slug);
   
   return {
@@ -39,7 +39,7 @@ const Post = ({post}) => {
       <div className='border-b-2 w-1/3 mt-1 border-sky-900'></div>
       <span className='text-gray-500'>Posted date at{post.metadata.date}</span>
       <br />
-      {post.metadata.tags.map((tag: String,index: number) => (
+      {post.metadata.tags.map((tag: string,index: number) => (
         <p className='text-white bg-sky-900 rounded-xl font-medium mt-2 px-2 inline-block mr-2' key={index}>
           <Link href= {`/posts/tag/${tag}/page/1`}>
           {tag}
@@ -49,19 +49,20 @@ const Post = ({post}) => {
       
       <div className='mt-10 font-medium'>
     
-        <ReactMarkdown 
-        children={post.markdown.parent} 
+        <ReactMarkdown
+        
            components={{
             code({node, inline, className, children}) {
               const match = /language-(\w+)/.exec(className || '')
               return !inline && match ? (
                 <SyntaxHighlighter
-                  {...props}
-                  children={String(children).replace(/\n$/, '')}
+                  // {...props}
+                  
                   style={kimbieLight}
                   language={match[1]}
                   PreTag="div"
-                />
+                >{String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
               ) : (
                 <code >
                   {children}
@@ -69,14 +70,16 @@ const Post = ({post}) => {
               )
             }
           }}
-        />
+        >{post.markdown.parent} 
+        
+        </ReactMarkdown>
         <Link href="/">
-          <span className='pd-20 mt-3 text-sky-900'>←ホームに戻る</span>
+          <span className='pb-20 block mt-3 text-sky-900'>←ホームに戻る</span>
         </Link>
         
         </div>
     </section>
-  )
-}
+  );
+};
 
 export default Post;
