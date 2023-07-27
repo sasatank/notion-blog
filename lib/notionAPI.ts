@@ -29,6 +29,8 @@ export const getAllPosts = async () => {
     ],
   });
 
+  console.log(posts);
+
   const allPosts = posts.results;
 
   // return allPosts;
