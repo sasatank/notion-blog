@@ -11,7 +11,7 @@ const Navbar = () => {
               <Link href="/" className="block px-4 py-2 hover:text-sky-900 transition-all duration-300">Home</Link>
             </li>
             <li>
-              <Link href="https://twitter.com/Sho_progra" className="block px-4 py-2 hover:text-sky-900 transition-all duration-300">X(Twitter)</Link>
+            <a href='https://twitter.com/Sho_progra' className='hover:text-sky-900 transition-all duration-300'>X(Twitter)</a>
             </li>
          
           </ul>
