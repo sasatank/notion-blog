@@ -56,7 +56,7 @@ const BlogPageList = ({ postsByPage, numberOfPage, allTags }) => {
 
       <main className="container w-full mt-16">
         <h1 className="text-5xl font-medium text-center mb-16">
-          Sho Blog🐈
+          Sho Blog🐈🐈
         </h1>
         <section className="sm:grid grid-cols-2 w-5/6 gap-3 mx-auto">
           {postsByPage.map((post) => (
