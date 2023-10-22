@@ -60,8 +60,8 @@ import {
 // };
 
 export const getSeverSideProps: GetServerSideProps = async (context) => {
-  const currentPage: string = context.params?.page?.toString();
-  const currentTag: string = context.params?.tag.toString();
+  const currentPage = context.params?.page?.toString();
+  const currentTag = context.params?.tag.toString();
 
   const upperCaseCurrentTag =
     currentTag.charAt(0).toUpperCase() + currentTag.slice(1);
