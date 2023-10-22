@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Pagination from "../../../../components/Pagination/Pagination";
 import SinglePost from "../../../../components/Post/SinglePost";
@@ -12,21 +12,40 @@ import {
   getPostsForTopPage,
 } from "../../../../lib/notionAPI";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const numberOfPage = await getNumberOfPages();
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const numberOfPage = await getNumberOfPages();
 
-  let params = [];
-  for (let i = 1; i <= numberOfPage; i++) {
-    params.push({ params: { page: i.toString() } });
-  }
+//   let params = [];
+//   for (let i = 1; i <= numberOfPage; i++) {
+//     params.push({ params: { page: i.toString() } });
+//   }
 
-  return {
-    paths: params,
-    fallback: "blocking",
-  };
-};
+//   return {
+//     paths: params,
+//     fallback: "blocking",
+//   };
+// };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   const currentPage = context.params?.page;
+//   const postsByPage = await getPostsByPage(
+//     parseInt(currentPage.toString(), 10)
+//   );
+//   const numberOfPage = await getNumberOfPages();
+
+//   const allTags = await getAllTags();
+
+//   return {
+//     props: {
+//       postsByPage,
+//       numberOfPage,
+//       allTags,
+//     },
+//     revalidate: 10,
+//   };
+// };
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const currentPage = context.params?.page;
   const postsByPage = await getPostsByPage(
     parseInt(currentPage.toString(), 10)
@@ -41,7 +60,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       numberOfPage,
       allTags,
     },
-    revalidate: 10,
+    // revalidate: 10,
   };
 };
 
