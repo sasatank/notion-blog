@@ -59,7 +59,7 @@ import {
 //   };
 // };
 
-export const getSeverSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const currentPage = context.params?.page?.toString();
   const currentTag = context.params?.tag.toString();
 
