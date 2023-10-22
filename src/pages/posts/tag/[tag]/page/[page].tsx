@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Pagination from "../../../../../../components/Pagination/Pagination";
 import SinglePost from "../../../../../../components/Post/SinglePost";
@@ -14,47 +14,65 @@ import {
   getAllTags
 } from "../../../../../../lib/notionAPI";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const allTags = await getAllTags();
-  let params = [];
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const allTags = await getAllTags();
+//   let params = [];
 
-  await Promise.all(
-    allTags.map((tag:string) => {
-      return getNumberOfPagesByTag(tag).then((NumberOfPagesByTag:number) => {
-        for (let i = 1; i <= NumberOfPagesByTag; i++) {
-          params.push({ params: {tag:tag, page: i.toString() } });
-        }
-      });
-    })
-  );
+//   await Promise.all(
+//     allTags.map((tag: string) => {
+//       return getNumberOfPagesByTag(tag).then((NumberOfPagesByTag: number) => {
+//         for (let i = 1; i <= NumberOfPagesByTag; i++) {
+//           params.push({ params: { tag: tag, page: i.toString() } });
+//         }
+//       });
+//     })
+//   );
 
-  // console.log(params);
+//   return {
+//     paths: params,
+//     fallback: "blocking",
+//   };
+// };
 
-  
-  
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   const currentPage: string = context.params?.page?.toString();
+//   const currentTag: string = context.params?.tag.toString();
 
-  
+//   const upperCaseCurrentTag =
+//     currentTag.charAt(0).toUpperCase() + currentTag.slice(1);
+//   // console.log(upperCaseCurrentTag);
 
-  return {
-    paths: params,
-    fallback: "blocking",
-  };
-};
+//   const posts = await getPostsByTagAndPage(upperCaseCurrentTag, parseInt(currentPage, 10));
 
-export const getStaticProps: GetStaticProps = async (context) => {
+//   const numberOfPagesByTag = await getNumberOfPagesByTag(upperCaseCurrentTag);
+
+//   const allTags = await getAllTags();
+
+//   return {
+//     props: {
+//       posts,
+//       numberOfPagesByTag,
+//       currentTag,
+//       allTags
+//     },
+//     revalidate: 10,
+//   };
+// };
+
+export const getSeverSideProps: GetServerSideProps = async (context) => {
   const currentPage: string = context.params?.page?.toString();
   const currentTag: string = context.params?.tag.toString();
-  
-  const upperCaseCurrentTag = 
+
+  const upperCaseCurrentTag =
     currentTag.charAt(0).toUpperCase() + currentTag.slice(1);
   // console.log(upperCaseCurrentTag);
- 
-  const posts = await getPostsByTagAndPage(upperCaseCurrentTag,parseInt(currentPage,10));
+
+  const posts = await getPostsByTagAndPage(upperCaseCurrentTag, parseInt(currentPage, 10));
 
   const numberOfPagesByTag = await getNumberOfPagesByTag(upperCaseCurrentTag);
 
   const allTags = await getAllTags();
-  
+
   return {
     props: {
       posts,
@@ -66,7 +84,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-const BlogTagPageList = ({ numberOfPagesByTag, posts,currentTag,allTags }) => {
+const BlogTagPageList = ({ numberOfPagesByTag, posts, currentTag, allTags }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
