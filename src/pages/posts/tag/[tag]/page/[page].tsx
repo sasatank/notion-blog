@@ -80,7 +80,7 @@ export const getSeverSideProps: GetServerSideProps = async (context) => {
       currentTag,
       allTags
     },
-    revalidate: 10,
+    // revalidate: 10,
   };
 };
 
